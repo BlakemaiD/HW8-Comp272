@@ -1,6 +1,6 @@
 /******************************************************************
  *
- *   ADD YOUR NAME / SECTION NUMBER HERE
+ *   Blake / 002
  *
  *   This java file contains the problem solutions of canFinish and
  *   numGroups methods.
@@ -9,7 +9,7 @@
 
 import java.util.*;
 
-class ProblemSolutions {
+class ProblemSolutionsHW8 {
 
     /**
      * Method canFinish
@@ -72,18 +72,42 @@ class ProblemSolutions {
      * @return boolean          - True if all exams can be taken, else false.
      */
 
-    public boolean canFinish(int numExams, 
-                             int[][] prerequisites) {
-      
+    public boolean canFinish(int numExams,int[][] prerequisites) {
+
         int numNodes = numExams;  // # of nodes in graph
 
         // Build directed graph's adjacency list
-        ArrayList<Integer>[] adj = getAdjList(numExams, 
-                                        prerequisites); 
+        ArrayList<Integer>[] adj = getAdjList(numExams,prerequisites);
 
-        // ADD YOUR CODE HERE - ADD YOUR NAME / SECTION AT TOP OF FILE
+        int[] visitedNode = new int[numExams];
+
+        // Check each unvisited node
+        for (int i = 0; i < numExams; i++) {
+            if (hasCycle(i, adj, visitedNode)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean hasCycle(int node, ArrayList<Integer>[] adj, int[] visited) {
+
+        if (visited[node] == 1) {
+            return true;
+        }
+
+        if (visited[node] == 2) {
+            return false;
+        }
+
+        visited[node] = 1;
+        for (Integer neighbor : adj[node]) {
+            if (hasCycle(neighbor, adj, visited)) {
+                return true;
+            }
+        }
+        visited[node] = 2;
         return false;
-
     }
 
 
@@ -101,8 +125,8 @@ class ProblemSolutions {
     private ArrayList<Integer>[] getAdjList(
             int numNodes, int[][] edges) {
 
-        ArrayList<Integer>[] adj 
-                    = new ArrayList[numNodes];      // Create an array of ArrayList ADT
+        ArrayList<Integer>[] adj
+                = new ArrayList[numNodes];      // Create an array of ArrayList ADT
 
         for (int node = 0; node < numNodes; node++){
             adj[node] = new ArrayList<Integer>();   // Allocate empty ArrayList per node
@@ -181,7 +205,6 @@ class ProblemSolutions {
                     graph.putIfAbsent(i, new ArrayList());
                     // Add AdjList for node j if not there
                     graph.putIfAbsent(j, new ArrayList());
-
                     // Update node i adjList to include node j
                     graph.get(i).add(j);
                     // Update node j adjList to include node i
@@ -190,9 +213,29 @@ class ProblemSolutions {
             }
         }
 
-        // YOUR CODE GOES HERE - you can add helper methods, you do not need
-        // to put all code in this method.
-        return -1;
+        // Track visited nodes
+        boolean[] nodeVisited = new boolean[numNodes];
+        int groups = 0;
+
+        //unvisited nodes
+        for (int node = 0; node < numNodes; node++) {
+            if (!nodeVisited[node]) {
+                groups++;
+                dfsVisitGroup(node, graph, nodeVisited);
+            }
+        }
+        return groups;
     }
 
+    private void dfsVisitGroup(int node,Map<Integer, List<Integer>> graph, boolean[] visited) {
+        visited[node] = true;
+
+        if (!graph.containsKey(node)) return;
+
+        for (int neighbor : graph.get(node)) {
+            if (!visited[neighbor]) {
+                dfsVisitGroup(neighbor, graph, visited);
+            }
+        }
+    }
 }
