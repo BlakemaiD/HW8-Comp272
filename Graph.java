@@ -1,6 +1,6 @@
 /******************************************************************
  *
- *   YOUR NAME / SECTION NUMBER
+ *   Blake / 002
  *
  *   Note, additional comments provided throughout this source code
  *   is for educational purposes
@@ -104,7 +104,30 @@ public class Graph {
   
   public int findRoot() {
 
-    // ADD YOUR CODE HERE - DO NOT FORGET TO ADD YOUR NAME/SECTION AT TOP OF FILE
-    return -1;
-  } 
+        boolean[] hasEdge = new boolean[numVertices];
+
+        //Mark vertices
+        for (LinkedList<Integer> adjList : adjListArr) {
+            for (Integer dest : adjList) {
+                hasEdge[dest] = true;
+            }
+        }
+
+        int result = -1;
+        int rootCount = 0;
+
+        //Find vertices
+        for (int i = 0; i < numVertices; i++) {
+            if (!hasEdge[i]) {
+                result = i;
+                rootCount++;
+            }
+        }
+
+        if (rootCount == 1) {
+            return vertexValues.get(result);
+        } else {
+            return -1;
+        }
+    }
 }
