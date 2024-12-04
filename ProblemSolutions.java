@@ -9,7 +9,7 @@
 
 import java.util.*;
 
-class ProblemSolutionsHW8 {
+class ProblemSolutions {
 
     /**
      * Method canFinish
